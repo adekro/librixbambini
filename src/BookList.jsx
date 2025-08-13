@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
 /**
  * BookList Component
@@ -12,12 +13,23 @@ import Box from '@mui/material/Box';
  * Renders a list of books. Each book is clickable and opens a URL in a new tab.
  * @param {object} props - The component props.
  * @param {Array<object>} props.books - The array of book objects to display.
+ * @param {boolean} props.loading - Whether the books are currently being loaded.
  */
-function BookList({ books }) {
+function BookList({ books, loading }) {
 
   const handleBookClick = (pdfUrl) => {
-    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+    if (pdfUrl) {
+      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+    }
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (books.length === 0) {
     return (
@@ -32,7 +44,7 @@ function BookList({ books }) {
       <List>
         {books.map((book) => (
           <ListItem key={book.title} disablePadding>
-            <ListItemButton onClick={() => handleBookClick(book.pdfUrl)}>
+            <ListItemButton onClick={() => handleBookClick(book.pdfUrl)} disabled={!book.pdfUrl}>
               <ListItemText
                 primary={book.title}
                 secondary={`${book.author} (${book.year})`}
