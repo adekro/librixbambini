@@ -3,66 +3,88 @@
     "title": "The Tale of Peter Rabbit",
     "author": "Beatrix Potter",
     "year": 1902,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/14838"
+    "pageUrl": "https://www.gutenberg.org/ebooks/14838",
+    "pdfUrl": "https://www.gutenberg.org/files/14838/14838-pdf.pdf",
+    "genres": ["Children's Literature", "Animals"]
   },
   {
     "title": "A Little Princess",
     "author": "Frances Hodgson Burnett",
     "year": 1905,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/146"
+    "pageUrl": "https://www.gutenberg.org/ebooks/146",
+    "pdfUrl": "https://www.gutenberg.org/files/146/146-0.pdf",
+    "genres": ["Children's Literature", "Fiction"]
   },
   {
     "title": "The Wonderful Wizard of Oz",
     "author": "L. Frank Baum",
     "year": 1900,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/55"
+    "pageUrl": "https://www.gutenberg.org/ebooks/55",
+    "pdfUrl": "https://www.gutenberg.org/files/55/55-0.pdf",
+    "genres": ["Fantasy", "Children's Literature"]
   },
   {
     "title": "Alice's Adventures in Wonderland",
     "author": "Lewis Carroll",
     "year": 1865,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/11"
+    "pageUrl": "https://www.gutenberg.org/ebooks/11",
+    "pdfUrl": "https://www.gutenberg.org/files/11/11-0.pdf",
+    "genres": ["Fantasy", "Literary Nonsense"]
   },
   {
     "title": "The Secret Garden",
     "author": "Frances Hodgson Burnett",
     "year": 1911,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/113"
+    "pageUrl": "https://www.gutenberg.org/ebooks/113",
+    "pdfUrl": "https://www.gutenberg.org/files/113/113-0.pdf",
+    "genres": ["Children's Literature", "Classic"]
   },
   {
     "title": "Peter Pan",
     "author": "J. M. Barrie",
     "year": 1904,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/16"
+    "pageUrl": "https://www.gutenberg.org/ebooks/16",
+    "pdfUrl": "https://www.gutenberg.org/files/16/16-0.pdf",
+    "genres": ["Fantasy", "Adventure"]
   },
   {
     "title": "Black Beauty",
     "author": "Anna Sewell",
     "year": 1877,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/271"
+    "pageUrl": "https://www.gutenberg.org/ebooks/271",
+    "pdfUrl": "https://www.gutenberg.org/files/271/271-0.pdf",
+    "genres": ["Children's Literature", "Animals"]
   },
   {
     "title": "The Wind in the Willows",
     "author": "Kenneth Grahame",
     "year": 1908,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/289"
+    "pageUrl": "https://www.gutenberg.org/ebooks/289",
+    "pdfUrl": "https://www.gutenberg.org/files/289/289-0.pdf",
+    "genres": ["Fantasy", "Animals"]
   },
   {
     "title": "Treasure Island",
     "author": "Robert Louis Stevenson",
     "year": 1883,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/120"
+    "pageUrl": "https://www.gutenberg.org/ebooks/120",
+    "pdfUrl": "https://www.gutenberg.org/files/120/120-0.pdf",
+    "genres": ["Adventure", "Pirates", "Young Adult"]
   },
   {
     "title": "The Adventures of Tom Sawyer",
     "author": "Mark Twain",
     "year": 1876,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/74"
+    "pageUrl": "https://www.gutenberg.org/ebooks/74",
+    "pdfUrl": "https://www.gutenberg.org/files/74/74-0.pdf",
+    "genres": ["Adventure", "Fiction"]
   },
   {
     "title": "Grimms' Fairy Tales",
     "author": "Jacob and Wilhelm Grimm",
     "year": 1812,
-    "pdfUrl": "https://www.gutenberg.org/ebooks/2591"
+    "pageUrl": "https://www.gutenberg.org/ebooks/2591",
+    "pdfUrl": "https://www.gutenberg.org/files/2591/2591-0.pdf",
+    "genres": ["Fairy Tale", "Folklore"]
   }
 ]
