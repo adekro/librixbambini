@@ -4,40 +4,41 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
-
 /**
  * BookList Component
  *
- * Renders a list of books. Each book item now displays genres and provides
- * two separate buttons: one to view the book's page on Project Gutenberg,
- * and another to download the PDF directly.
+ * Renders a list of books fetched from the API.
+ * It now distinguishes between the initial state (before any search)
+ * and a search that returned no results.
  *
  * @param {object} props - The component props.
  * @param {Array<object>} props.books - The array of book objects to display.
- * @param {boolean} props.loading - Whether the books are currently being loaded.
+ * @param {boolean} props.hasSearched - A flag to indicate if a search has been performed.
  */
-function BookList({ books, loading }) {
+function BookList({ books, hasSearched }) {
 
-
-  // A generic handler to open a URL in a new tab.
   const handleLinkClick = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  // Display a message if the filtered list is empty.
-
-  
-
-
-  if (books.length === 0) {
+  // If a search has been performed and the books array is empty, show "No results".
+  if (hasSearched && books.length === 0) {
     return (
       <Typography sx={{ textAlign: 'center', marginTop: 4 }}>
-        Nessun libro trovato.
+        Nessun libro trovato. Prova con un altro termine di ricerca.
+      </Typography>
+    );
+  }
+
+  // If no search has been performed yet, show a welcome/prompt message.
+  if (!hasSearched && books.length === 0) {
+    return (
+      <Typography sx={{ textAlign: 'center', marginTop: 4, color: 'text.secondary' }}>
+        Usa la barra di ricerca in alto per trovare libri di pubblico dominio.
       </Typography>
     );
   }
@@ -46,9 +47,8 @@ function BookList({ books, loading }) {
     <Box sx={{ width: '100%', maxWidth: 800, bgcolor: 'background.paper', margin: 'auto' }}>
       <List>
         {books.map((book) => (
-
           <ListItem
-            key={book.title}
+            key={book.id} // Use the unique book ID as the key
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -57,19 +57,16 @@ function BookList({ books, loading }) {
               paddingY: 2
             }}
           >
-            {/* Book title, author, and year */}
             <ListItemText
               primary={book.title}
-              secondary={`${book.author} (${book.year})`}
+              secondary={`${book.author} (Anno approx: ${book.year})`}
               sx={{ marginBottom: 1 }}
             />
 
-            {/* Genres displayed as Chips */}
             <Stack direction="row" spacing={1} sx={{ marginBottom: 2 }} useFlexGap flexWrap="wrap">
               {book.genres.map(genre => <Chip label={genre} key={genre} size="small" variant="outlined" />)}
             </Stack>
 
-            {/* Action buttons */}
             <Stack direction="row" spacing={1}>
               <Button
                 variant="outlined"
@@ -78,7 +75,6 @@ function BookList({ books, loading }) {
               >
                 Scheda Libro
               </Button>
-              {/* Conditionally render the PDF button only if a pdfUrl exists */}
               {book.pdfUrl && (
                 <Button
                   variant="contained"
@@ -89,7 +85,6 @@ function BookList({ books, loading }) {
                 </Button>
               )}
             </Stack>
-
           </ListItem>
         ))}
       </List>
