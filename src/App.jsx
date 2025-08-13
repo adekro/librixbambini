@@ -2,43 +2,44 @@ import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
+import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import SearchBar from './SearchBar';
 import BookList from './BookList';
 import { useBooks } from './hooks/useBooks';
 
-// Define the application title as a constant for better maintainability and clarity.
-const APP_TITLE = "Biblioteca Pubblica per Bambini";
+const APP_TITLE = "Ricerca Libri su Project Gutenberg";
 
 /**
  * App Component
  *
- * This is the main component of the application. It has been refactored to be a pure
- * presentational component. All business logic (data fetching, searching, filtering)
- * is now encapsulated in the `useBooks` custom hook.
+ * The main component, now updated to handle API-based searching.
+ * It manages the search input state and triggers the API call via the useBooks hook.
+ * It also handles the UI for loading and error states.
  */
 function App() {
-  const [searchType, setSearchType] = useState('title_author');
-  // Use the custom hook to get the state and functions needed by the component.
-  // This keeps the App component clean and focused on the UI.
-  const { searchQuery, setSearchQuery, filteredBooks, loading } = useBooks(searchType);
+  // State for the search input field. This is controlled by the user.
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // The event handler for the search input now simply calls the state setter
-  // provided by the `useBooks` hook.
-  const handleSearchChange = (event) => {
+  // The custom hook now provides the book list, loading/error states, and the fetch function.
+  const { books, isLoading, error, fetchBooks } = useBooks();
+
+  // Handler for the search input change. Updates the local query state.
+  const handleQueryChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const handleSearchTypeChange = (event) => {
-    setSearchType(event.target.value);
-    setSearchQuery(''); // Reset search query when changing search type
+  // Handler for the search button click. Triggers the API call.
+  const handleSearch = () => {
+    fetchBooks(searchQuery);
   };
 
   return (
     <>
       <CssBaseline />
       <Container>
-        {/* Header Title */}
         <Typography
           variant="h3"
           component="h1"
@@ -49,16 +50,30 @@ function App() {
           {APP_TITLE}
         </Typography>
 
-        {/* Search Bar Component */}
         <SearchBar
           searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-          searchType={searchType}
-          onSearchTypeChange={handleSearchTypeChange}
+          onQueryChange={handleQueryChange}
+          onSearch={handleSearch}
+          isLoading={isLoading}
         />
 
-        {/* Book List Component */}
-        <BookList books={filteredBooks} loading={loading} />
+        {/* Display a loading spinner while fetching data */}
+        {isLoading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', marginY: 4 }}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {/* Display an error message if the fetch fails */}
+        {error && (
+          <Alert severity="error" sx={{ marginY: 2 }}>
+            Si è verificato un errore durante la ricerca: {error.message}
+          </Alert>
+        )}
+
+        {/* Display the list of books */}
+        {/* We pass a prop to indicate if a search has been performed */}
+        <BookList books={books} hasSearched={!isLoading && !error} />
       </Container>
     </>
   );

@@ -1,44 +1,56 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 
 /**
  * SearchBar Component
  *
- * Renders a search input field.
+ * Renders a search input field and a search button.
+ * The search is triggered by clicking the button, not on input change.
+ *
  * @param {object} props - The component props.
  * @param {string} props.searchQuery - The current value of the search input.
- * @param {function} props.onSearchChange - The function to call when the search input changes.
- * @param {string} props.searchType - The current search type.
- * @param {function} props.onSearchTypeChange - The function to call when the search type changes.
+ * @param {function} props.onQueryChange - The function to call when the search input changes.
+ * @param {function} props.onSearch - The function to call when the search button is clicked.
+ * @param {boolean} props.isLoading - Flag to disable the button during a search.
  */
-function SearchBar({ searchQuery, onSearchChange, searchType, onSearchTypeChange }) {
+function SearchBar({ searchQuery, onQueryChange, onSearch, isLoading }) {
+
+  // Allow searching by pressing the "Enter" key in the text field.
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      onSearch();
+    }
+  };
+
   return (
-    <Box sx={{ marginY: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
-      <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel id="search-type-label">Cerca per</InputLabel>
-        <Select
-          labelId="search-type-label"
-          id="search-type-select"
-          value={searchType}
-          label="Cerca per"
-          onChange={onSearchTypeChange}
-        >
-          <MenuItem value="title_author">Titolo/Autore</MenuItem>
-          <MenuItem value="genre">Genere</MenuItem>
-        </Select>
-      </FormControl>
+    <Box
+      sx={{
+        marginY: 4,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 2
+      }}
+    >
       <TextField
-        label="Cerca un libro..."
+        label="Cerca per titolo, autore o genere..."
         variant="outlined"
         value={searchQuery}
-        onChange={onSearchChange}
-        sx={{ width: '60%', maxWidth: '500px' }}
+        onChange={onQueryChange}
+        onKeyPress={handleKeyPress}
+        sx={{ flexGrow: 1, maxWidth: '600px' }}
+        disabled={isLoading}
       />
+      <Button
+        variant="contained"
+        onClick={onSearch}
+        disabled={isLoading || !searchQuery}
+        sx={{ height: '56px' }} // Match the height of the TextField
+      >
+        {isLoading ? 'Ricerca...' : 'Cerca'}
+      </Button>
     </Box>
   );
 }
