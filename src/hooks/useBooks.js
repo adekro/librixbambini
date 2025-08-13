@@ -1,44 +1,57 @@
 import { useState, useEffect, useMemo } from 'react';
-import bookData from '../data/books.json';
 
 /**
  * @description Custom hook for managing book data, including fetching, searching, and filtering.
  * This encapsulates the business logic away from the UI components.
  * @returns {object} An object containing the search query, a function to set it, and the list of filtered books.
  */
-export function useBooks() {
+export function useBooks(searchType) {
   // State to hold the complete list of books
   const [books, setBooks] = useState([]);
 
   // State for the current search query input by the user
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Effect to load the initial book data from the JSON file on component mount.
-  // This simulates an asynchronous data fetch.
   useEffect(() => {
-    setBooks(bookData);
-  }, []); // The empty dependency array ensures this runs only once.
-
-  // Memoized filtering logic.
-  // `useMemo` prevents re-calculating the filtered list on every render,
-  // running only when the `books` list or the `searchQuery` changes.
-  const filteredBooks = useMemo(() => {
-    // If the search query is empty, return the full list of books.
-    if (!searchQuery) {
-      return books;
+    if (searchQuery === '') {
+      setBooks([]);
+      return;
     }
 
-    // Normalize the search query to lower case for case-insensitive matching.
-    const lowercasedQuery = searchQuery.toLowerCase();
+    const fetchBooks = async () => {
+      setLoading(true);
+      try {
+        let url = 'https://gutendex.com/books';
+        if (searchType === 'genre') {
+          url = `https://gutendex.com/books?topic=${searchQuery}`;
+        } else {
+          url = `https://gutendex.com/books?search=${encodeURIComponent(searchQuery)}`;
+        }
+        const response = await fetch(url);
+        const data = await response.json();
+        const formattedBooks = data.results.map(book => ({
+          title: book.title,
+          author: book.authors.map(a => a.name).join(', '),
+          year: book.authors.length > 0 ? book.authors[0].birth_year : null,
+          pdfUrl: book.formats['application/pdf'] || book.formats['text/plain'],
+        }));
+        setBooks(formattedBooks);
+      } catch (error) {
+        console.error("Failed to fetch books:", error);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Filter the books array based on the query.
-    // A book is included if its title or author's name includes the query string.
-    return books.filter(book =>
-      book.title.toLowerCase().includes(lowercasedQuery) ||
-      book.author.toLowerCase().includes(lowercasedQuery)
-    );
-  }, [books, searchQuery]); // Dependencies for the memoization
+    const debounceFetch = setTimeout(() => {
+      fetchBooks();
+    }, 500); // Debounce API calls
+
+    return () => clearTimeout(debounceFetch);
+  }, [searchQuery, searchType]);
 
   // Expose the necessary state and functions to the component using this hook.
-  return { searchQuery, setSearchQuery, filteredBooks };
+  return { searchQuery, setSearchQuery, filteredBooks: books, loading };
 }
