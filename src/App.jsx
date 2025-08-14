@@ -5,21 +5,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 import SearchBar from './SearchBar';
 import BookList from './BookList';
+import EpicExtractor from './EpicExtractor'; // Import the new component
 import { useBooks } from './hooks/useBooks';
 
-const APP_TITLE = "Ricerca Libri su Project Gutenberg";
+const APP_TITLE = "Book Tools"; // Changed title to be more generic
 
-/**
- * App Component
- *
- * The main component, now updated to handle API-based searching.
- * It manages the search input state and triggers the API call via the useBooks hook.
- * It also handles the UI for loading and error states.
- */
 function App() {
+  const [view, setView] = useState('gutenberg'); // 'gutenberg' or 'epic'
+
   // State for the search input field. This is controlled by the user.
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -50,30 +48,41 @@ function App() {
           {APP_TITLE}
         </Typography>
 
-        <SearchBar
-          searchQuery={searchQuery}
-          onQueryChange={handleQueryChange}
-          onSearch={handleSearch}
-          isLoading={isLoading}
-        />
+        <Stack direction="row" spacing={2} sx={{ marginY: 2 }} justifyContent="center">
+          <Button variant={view === 'gutenberg' ? 'contained' : 'outlined'} onClick={() => setView('gutenberg')}>
+            Project Gutenberg Search
+          </Button>
+          <Button variant={view === 'epic' ? 'contained' : 'outlined'} onClick={() => setView('epic')}>
+            Get Epic Extractor
+          </Button>
+        </Stack>
 
-        {/* Display a loading spinner while fetching data */}
-        {isLoading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginY: 4 }}>
-            <CircularProgress />
-          </Box>
+        {view === 'gutenberg' && (
+          <>
+            <SearchBar
+              searchQuery={searchQuery}
+              onQueryChange={handleQueryChange}
+              onSearch={handleSearch}
+              isLoading={isLoading}
+            />
+
+            {isLoading && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginY: 4 }}>
+                <CircularProgress />
+              </Box>
+            )}
+
+            {error && (
+              <Alert severity="error" sx={{ marginY: 2 }}>
+                An error occurred during the search: {error.message}
+              </Alert>
+            )}
+
+            <BookList books={books} hasSearched={!isLoading && !error} />
+          </>
         )}
 
-        {/* Display an error message if the fetch fails */}
-        {error && (
-          <Alert severity="error" sx={{ marginY: 2 }}>
-            Si è verificato un errore durante la ricerca: {error.message}
-          </Alert>
-        )}
-
-        {/* Display the list of books */}
-        {/* We pass a prop to indicate if a search has been performed */}
-        <BookList books={books} hasSearched={!isLoading && !error} />
+        {view === 'epic' && <EpicExtractor />}
       </Container>
     </>
   );
