@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 
-const EPIC_URL = 'https://www.getepic.com';
+const EPIC_URL = '/api/epic-proxy';
 
 function EpicExtractor() {
   const iframeRef = useRef(null);
