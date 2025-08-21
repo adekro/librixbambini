@@ -32,7 +32,7 @@ const EpicExtractor = () => {
         width="100%"
         height="600px"
         style={{ border: '1px solid #ccc' }}
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-pointer-lock"
+        sandbox="allow-scripts allow-forms allow-popups allow-modals allow-pointer-lock"
         title="Epic Books"
       />
       <button onClick={captureScreenshot}>📸 Cattura Screenshot</button>

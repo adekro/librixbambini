@@ -53,25 +53,28 @@ export default async function handler(req, res) {
         html = baseTag + html;
     }
 
-    // Rewrite any absolute paths to go through the proxy.
+    // Rewrite any absolute paths to go through the proxy, but only if they haven't been rewritten already.
     // The <base> tag does not affect URLs starting with a '/'.
-    html = html.replace(/(href|src|action)="\/(?!\/)/g, `$1="/api/epic-proxy/`);
+    html = html.replace(/(href|src|action)="\/(?!api\/)/g, `$1="/api/epic-proxy/`);
 
-    // Rewrite srcset as well, as it's not affected by <base>
+    // Rewrite srcset as well, ensuring not to double-prefix.
     html = html.replace(/(srcset)="([^"]*)"/g, (match, attr, value) => {
       const newSources = value.split(',').map(source => {
         const parts = source.trim().split(/\s+/);
         const url = parts[0];
         const descriptor = parts.slice(1).join(' ');
-        if (url.startsWith('/')) {
+        // Only prepend proxy path if it's an absolute path AND not already proxied
+        if (url.startsWith('/') && !url.startsWith('/api/')) {
           return `/api/epic-proxy${url} ${descriptor || ''}`;
         }
-        // Relative URLs will be handled by the <base> tag, so we leave them
         return source;
       }).join(', ');
       return `${attr}="${newSources}"`;
     });
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Content-Type', contentType);
     res.setHeader('X-Frame-Options', 'ALLOWALL');
 
